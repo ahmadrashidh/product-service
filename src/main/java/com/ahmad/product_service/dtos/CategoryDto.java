@@ -1,12 +1,11 @@
-package com.ahmad.product_service.models;
+package com.ahmad.product_service.dtos;
 
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class Category extends Base {
-
+public class CategoryDto {
+    private Long id;
     private String name;
-
 }
