@@ -39,17 +39,21 @@ public class FakeStoreProductServiceImpl implements ProductService {
 
     @Override
     public Product addProduct(Product product) {
-        return null;
+        FakeStoreProductDto fakeStoreProductDto = this.fakeStoreClient.addProduct(getFakeStoreProductDtoFromProduct(product));
+        return getProductFromFakeStoreProductDto(fakeStoreProductDto);
     }
+
+
 
     @Override
     public Product deleteProductById(Long id) {
-        return null;
+        return getProductFromFakeStoreProductDto(this.fakeStoreClient.deleteProductById(id));
     }
 
     @Override
-    public Product updateProductById(Long id) {
-        return null;
+    public Product updateProductById(Long id, Product product) {
+        return getProductFromFakeStoreProductDto(this.fakeStoreClient.updateProductById(id, getFakeStoreProductDtoFromProduct(product)));
+
     }
 
 
@@ -64,5 +68,14 @@ public class FakeStoreProductServiceImpl implements ProductService {
         category.setName(fakeStoreProduct.getCategory());
         product.setCategory(category);
         return product;
+    }
+
+    private FakeStoreProductDto getFakeStoreProductDtoFromProduct(Product product) {
+        FakeStoreProductDto fakeStoreProductDto = new FakeStoreProductDto();
+        fakeStoreProductDto.setTitle(product.getName());
+        fakeStoreProductDto.setCategory(product.getCategory().getName());
+        fakeStoreProductDto.setDescription(product.getDescription());
+        fakeStoreProductDto.setPrice(product.getPrice());
+        return fakeStoreProductDto;
     }
 }

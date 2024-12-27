@@ -2,6 +2,7 @@ package com.ahmad.product_service.controllers;
 
 import com.ahmad.product_service.dtos.CategoryDto;
 import com.ahmad.product_service.dtos.ProductDto;
+import com.ahmad.product_service.models.Category;
 import com.ahmad.product_service.models.Product;
 import com.ahmad.product_service.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,18 +41,20 @@ public class ProductController {
 
 
     @PostMapping
-    public ProductDto createProduct(ProductDto product){
-        return null;
+    public ProductDto createProduct(@RequestBody ProductDto productDto){
+        Product product = this.productService.addProduct(getProductFromProductDto(productDto));
+        return getProductDtoFromProduct(product);
     }
 
-    @PutMapping
-    public ProductDto updateProduct(ProductDto product){
-        return null;
+    @PutMapping("/{id}")
+    public ProductDto updateProduct(@PathVariable("id") Long id,@RequestBody ProductDto product){
+        return getProductDtoFromProduct(this.productService.updateProductById(id, getProductFromProductDto(product)));
     }
 
     @DeleteMapping("/{id}")
-    public ProductDto deleteProduct(@PathVariable("id") Long id){
-        return null;
+    public ProductDto deleteProductById(@PathVariable("id") Long id){
+
+        return getProductDtoFromProduct(this.productService.deleteProductById(id));
     }
 
     private ProductDto getProductDtoFromProduct(Product product) {
@@ -65,5 +68,17 @@ public class ProductController {
         productDto.setCategory(categoryDto);
         productDto.setPrice(product.getPrice());
         return productDto;
+    }
+
+    private Product getProductFromProductDto(ProductDto productDto) {
+        Product product = new Product();
+        product.setName(productDto.getName());
+        product.setDescription(productDto.getDescription());
+        Category category = new Category();
+        category.setId(productDto.getCategory().getId());
+        category.setName(productDto.getCategory().getName());
+        product.setCategory(category);
+        product.setPrice(productDto.getPrice());
+        return product;
     }
 }
