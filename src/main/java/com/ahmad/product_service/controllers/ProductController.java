@@ -67,6 +67,7 @@ public class ProductController {
         categoryDto.setName(product.getCategory().getName());
         productDto.setCategory(categoryDto);
         productDto.setPrice(product.getPrice());
+        productDto.setImage(product.getImage());
         return productDto;
     }
 
@@ -79,6 +80,7 @@ public class ProductController {
         category.setName(productDto.getCategory().getName());
         product.setCategory(category);
         product.setPrice(productDto.getPrice());
+        product.setImage(productDto.getImage());
         return product;
     }
 }

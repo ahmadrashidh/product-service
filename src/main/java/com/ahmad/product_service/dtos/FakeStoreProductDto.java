@@ -13,7 +13,7 @@ public class FakeStoreProductDto {
 
     private String description;
 
-    private Long price;
+    private Double price;
 
     private String category;
 }

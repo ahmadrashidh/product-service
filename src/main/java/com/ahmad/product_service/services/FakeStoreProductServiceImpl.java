@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-@Service
+@Service("FakeStoreProductService")
 public class FakeStoreProductServiceImpl implements ProductService {
 
     private FakeStoreClient fakeStoreClient;
