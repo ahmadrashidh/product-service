@@ -5,8 +5,11 @@ import com.ahmad.product_service.models.Category;
 import com.ahmad.product_service.models.Product;
 import com.ahmad.product_service.repositories.CategoryRepository;
 import com.ahmad.product_service.repositories.ProductRepository;
+import com.ahmad.product_service.security.dtos.User;
 import org.springframework.context.annotation.Primary;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 import java.util.Optional;
@@ -17,10 +20,12 @@ public class ProductServiceImpl implements ProductService {
 
     private ProductRepository productRepo;
     private CategoryRepository categoryRepo;
+    private RestTemplate restTemplate;
 
-    public ProductServiceImpl(ProductRepository productRepo, CategoryRepository categoryRepo){
+    public ProductServiceImpl(ProductRepository productRepo, CategoryRepository categoryRepo, RestTemplate restTemplate){
         this.productRepo = productRepo;
         this.categoryRepo = categoryRepo;
+        this.restTemplate = restTemplate;
     }
 
     @Override
@@ -30,6 +35,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product getProductById(Long id) {
+        ResponseEntity<Object> responseEnt =  restTemplate.getForEntity("http://USERSERVICE/user/1", Object.class);
 
         Optional<Product> productOpt = this.productRepo.findById(id);
         if(productOpt.isEmpty())

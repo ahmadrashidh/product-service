@@ -29,7 +29,7 @@ public class SecurityConfiguration {
 
         http
                 .authorizeHttpRequests((authorize) -> authorize
-                        .requestMatchers("/products/{id}").hasAuthority("CUSTOMER")
+                        .requestMatchers("/products/{id}").hasAuthority("ADMIN")
                         .requestMatchers("/products").hasAuthority("ADMIN")
                         .anyRequest().authenticated()
                 )
