@@ -6,6 +6,7 @@ import com.ahmad.product_service.models.Product;
 import com.ahmad.product_service.repositories.CategoryRepository;
 import com.ahmad.product_service.repositories.ProductRepository;
 import com.ahmad.product_service.security.dtos.User;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -20,12 +21,13 @@ public class ProductServiceImpl implements ProductService {
 
     private ProductRepository productRepo;
     private CategoryRepository categoryRepo;
+
+    @Autowired
     private RestTemplate restTemplate;
 
-    public ProductServiceImpl(ProductRepository productRepo, CategoryRepository categoryRepo, RestTemplate restTemplate){
+    public ProductServiceImpl(ProductRepository productRepo, CategoryRepository categoryRepo){
         this.productRepo = productRepo;
         this.categoryRepo = categoryRepo;
-        this.restTemplate = restTemplate;
     }
 
     @Override
