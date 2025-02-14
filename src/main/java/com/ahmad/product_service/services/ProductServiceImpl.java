@@ -8,6 +8,10 @@ import com.ahmad.product_service.repositories.ProductRepository;
 import com.ahmad.product_service.security.dtos.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -34,6 +38,14 @@ public class ProductServiceImpl implements ProductService {
     public List<Product> getAllProducts() {
         return this.productRepo.findAll();
     }
+
+    @Override
+    public Page<Product> getAllProducts(int pageNo, int page) {
+        Sort sort = Sort.by(Sort.Direction.DESC, "price");
+        Pageable pageable = PageRequest.of(pageNo, page, sort);
+        return productRepo.findAll(pageable);
+    }
+
 
     @Override
     public Product getProductById(Long id) {

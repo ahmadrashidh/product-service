@@ -4,6 +4,7 @@ import com.ahmad.product_service.dtos.FakeStoreProductDto;
 import com.ahmad.product_service.models.Category;
 import com.ahmad.product_service.models.Product;
 import com.ahmad.product_service.thirdpartyclients.FakeStoreClient;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -31,6 +32,12 @@ public class FakeStoreProductServiceImpl implements ProductService {
 
         return productList;
     }
+
+    @Override
+    public Page<Product> getAllProducts(int pageNo, int page) {
+        return null;
+    }
+
 
     @Override
     public Product getProductById(Long id) {

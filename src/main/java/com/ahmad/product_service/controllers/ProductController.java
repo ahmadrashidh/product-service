@@ -7,6 +7,7 @@ import com.ahmad.product_service.models.Product;
 import com.ahmad.product_service.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -24,14 +25,10 @@ public class ProductController {
     }
 
     @GetMapping
-    public List<ProductDto> getAllProducts(){
-        List<Product> productList = this.productService.getAllProducts();
-        List<ProductDto> productDtoList = new ArrayList<>();
-        for(Product product: productList){
-            productDtoList.add(getProductDtoFromProduct(product));
-        }
+    public  Page<ProductDto> getAllProducts(@RequestParam("pageNo") int pageNo, @RequestParam("pageSize") int pageSize){
+        Page<Product> productPage = this.productService.getAllProducts(pageNo, pageSize);
 
-        return productDtoList;
+        return this.convertToDtoPage(productPage);
     }
 
     @GetMapping("/{id}")
@@ -83,5 +80,9 @@ public class ProductController {
         product.setPrice(productDto.getPrice());
         product.setImage(productDto.getImage());
         return product;
+    }
+
+    public Page<ProductDto> convertToDtoPage(Page<Product> productPage) {
+        return productPage.map(this::getProductDtoFromProduct);
     }
 }
