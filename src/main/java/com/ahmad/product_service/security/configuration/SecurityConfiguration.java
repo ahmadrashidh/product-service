@@ -29,9 +29,9 @@ public class SecurityConfiguration {
 
         http
                 .authorizeHttpRequests((authorize) -> authorize
-                        .requestMatchers("/products/{id}").hasAuthority("ADMIN")
-                        .requestMatchers("/products").hasAuthority("ADMIN")
-                        .anyRequest().authenticated()
+//                        .requestMatchers("/products/{id}").hasAuthority("ADMIN")
+//                        .requestMatchers("/products").hasAuthority("ADMIN")
+                        .anyRequest().permitAll()
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2
                         .jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter()))

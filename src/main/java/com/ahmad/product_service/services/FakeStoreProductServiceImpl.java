@@ -4,20 +4,27 @@ import com.ahmad.product_service.dtos.FakeStoreProductDto;
 import com.ahmad.product_service.models.Category;
 import com.ahmad.product_service.models.Product;
 import com.ahmad.product_service.thirdpartyclients.FakeStoreClient;
+import org.springframework.context.annotation.Primary;
 import org.springframework.data.domain.Page;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 
 @Service("FakeStoreProductService")
+@Primary
 public class FakeStoreProductServiceImpl implements ProductService {
 
     private FakeStoreClient fakeStoreClient;
+    private RedisTemplate<Long, Object> redisTemplate;
 
-    public FakeStoreProductServiceImpl(FakeStoreClient fakeStoreClient){
+    public FakeStoreProductServiceImpl(FakeStoreClient fakeStoreClient, RedisTemplate<Long, Object> redisTemplate){
         this.fakeStoreClient = fakeStoreClient;
+        this.redisTemplate = redisTemplate;
     }
 
 
@@ -41,26 +48,38 @@ public class FakeStoreProductServiceImpl implements ProductService {
 
     @Override
     public Product getProductById(Long id) {
-        return getProductFromFakeStoreProductDto(this.fakeStoreClient.getProductById(id));
+
+        if(redisTemplate.opsForHash().get(id, "PRODUCTS") != null){
+            return (Product) redisTemplate.opsForHash().get(id, "PRODUCTS");
+        }
+        Product product = getProductFromFakeStoreProductDto(this.fakeStoreClient.getProductById(id));
+        redisTemplate.opsForHash().put(id, "PRODUCTS", product);
+
+        return product;
     }
 
     @Override
     public Product addProduct(Product product) {
         FakeStoreProductDto fakeStoreProductDto = this.fakeStoreClient.addProduct(getFakeStoreProductDtoFromProduct(product));
-        return getProductFromFakeStoreProductDto(fakeStoreProductDto);
+        Product createdProduct = getProductFromFakeStoreProductDto(fakeStoreProductDto);
+        redisTemplate.opsForHash().put(createdProduct.getId(), "PRODUCTS", createdProduct);
+        return createdProduct;
     }
 
 
 
     @Override
     public Product deleteProductById(Long id) {
-        return getProductFromFakeStoreProductDto(this.fakeStoreClient.deleteProductById(id));
+        Product deletedProduct = getProductFromFakeStoreProductDto(this.fakeStoreClient.deleteProductById(id));
+        redisTemplate.opsForHash().delete(deletedProduct.getId(), "PRODUCTS");
+        return  deletedProduct;
     }
 
     @Override
     public Product updateProductById(Long id, Product product) {
-        return getProductFromFakeStoreProductDto(this.fakeStoreClient.updateProductById(id, getFakeStoreProductDtoFromProduct(product)));
-
+        Product updatedProduct = getProductFromFakeStoreProductDto(this.fakeStoreClient.updateProductById(id, getFakeStoreProductDtoFromProduct(product)));
+        redisTemplate.opsForHash().put(updatedProduct.getId(), "PRODUCTS", updatedProduct);
+        return updatedProduct;
     }
 
 

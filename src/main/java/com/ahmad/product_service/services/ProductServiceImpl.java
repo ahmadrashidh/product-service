@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service("ProductService")
-@Primary
+//@Primary
 public class ProductServiceImpl implements ProductService {
 
     private ProductRepository productRepo;
@@ -49,7 +49,6 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product getProductById(Long id) {
-        ResponseEntity<Object> responseEnt =  restTemplate.getForEntity("http://USERSERVICE/user/1", Object.class);
 
         Optional<Product> productOpt = this.productRepo.findById(id);
         if(productOpt.isEmpty())

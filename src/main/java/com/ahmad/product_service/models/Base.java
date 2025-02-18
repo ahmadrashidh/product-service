@@ -7,10 +7,12 @@ import jakarta.persistence.MappedSuperclass;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serializable;
+
 @Getter
 @Setter
 @MappedSuperclass
-public class Base {
+public class Base implements Serializable {
 
     @Id
     @GeneratedValue(strategy =  GenerationType.AUTO)

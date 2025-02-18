@@ -7,10 +7,12 @@ import jakarta.persistence.ManyToOne;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serializable;
+
 @Getter
 @Setter
 @Entity
-public class Product extends Base{
+public class Product extends Base implements Serializable {
 
     private String name;
 
