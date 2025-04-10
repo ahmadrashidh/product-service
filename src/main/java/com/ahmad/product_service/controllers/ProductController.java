@@ -2,12 +2,16 @@ package com.ahmad.product_service.controllers;
 
 import com.ahmad.product_service.dtos.CategoryDto;
 import com.ahmad.product_service.dtos.ProductDto;
+import com.ahmad.product_service.dtos.SendEmailEventDto;
 import com.ahmad.product_service.models.Category;
 import com.ahmad.product_service.models.Product;
 import com.ahmad.product_service.services.ProductService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -19,9 +23,14 @@ public class ProductController {
 
     private ProductService productService;
 
+    private KafkaTemplate<String, String> kafkaTemplate;
+    private ObjectMapper objectMapper = new ObjectMapper();
+
     @Autowired
-    public ProductController(ProductService productService){
+    public ProductController(ProductService productService, KafkaTemplate<String,String> kafkaTemplate, ObjectMapper objectMapper){
+        this.kafkaTemplate = kafkaTemplate;
         this.productService = productService;
+        this.objectMapper = objectMapper;
     }
 
     @GetMapping
@@ -32,9 +41,16 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public ProductDto getProductById(@PathVariable("id") Long id){
+    public ProductDto getProductById(@PathVariable("id") Long id) throws JsonProcessingException {
+        SendEmailEventDto sendEmailEventDto = new SendEmailEventDto();
+        sendEmailEventDto.setTo("ahmadrashidh.ameerhamsha@gmail.com");
+        sendEmailEventDto.setFrom("jivefog@gmail.com");
+        sendEmailEventDto.setSubject("Product Details");
+        sendEmailEventDto.setBody("Product Ordered");
 
+        kafkaTemplate.send("send-email",objectMapper.writeValueAsString(sendEmailEventDto));
         return getProductDtoFromProduct(this.productService.getProductById(id));
+
     }
 
 

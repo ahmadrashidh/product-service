@@ -33,9 +33,9 @@ public class SecurityConfiguration {
 //                        .requestMatchers("/products").hasAuthority("ADMIN")
                         .anyRequest().permitAll()
                 )
-                .oauth2ResourceServer(oauth2 -> oauth2
-                        .jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter()))
-                )
+//                .oauth2ResourceServer(oauth2 -> oauth2
+//                        .jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter()))
+//                )
                 .cors().disable()
                 .csrf().disable();
 
@@ -54,10 +54,10 @@ public class SecurityConfiguration {
         return jwtAuthenticationConverter;
     }
 
-    // JwtDecoder to decode the JWT using JWK Set URI
-    @Bean
-    public JwtDecoder jwtDecoder() {
-        return NimbusJwtDecoder.withJwkSetUri(jwkSetUri).build();
-    }
+//    // JwtDecoder to decode the JWT using JWK Set URI
+//    @Bean
+//    public JwtDecoder jwtDecoder() {
+//        return NimbusJwtDecoder.withJwkSetUri(jwkSetUri).build();
+//    }
 
 }
